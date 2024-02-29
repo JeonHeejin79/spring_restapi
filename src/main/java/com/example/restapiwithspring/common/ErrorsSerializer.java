@@ -8,13 +8,14 @@ import org.springframework.validation.Errors;
 
 import java.io.IOException;
 
-@JsonComponent // objectMapper 를 등록한다.  objectMapper 는 ErrorsSerializer 를 사용한다. Errors 객체를 serialization 할떄
+// objectMapper 를 등록한다.  objectMapper 는 ErrorsSerializer 를 사용한다. Errors 객체를 serialization 할떄
+@JsonComponent
 public class ErrorsSerializer extends JsonSerializer<Errors> {
     @Override
     public void serialize(Errors errors, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartArray();
 
-        errors.getFieldErrors().stream().forEach(v -> {
+        errors.getFieldErrors().forEach(v -> {
             try {
                 jsonGenerator.writeStartObject();
                 jsonGenerator.writeStringField("field", v.getField());
@@ -30,7 +31,7 @@ public class ErrorsSerializer extends JsonSerializer<Errors> {
                 e.printStackTrace();
             }
         });
-        errors.getGlobalErrors().stream().forEach(v -> {
+        errors.getGlobalErrors().forEach(v -> {
             try {
                 jsonGenerator.writeStartObject();
                 jsonGenerator.writeStringField("objectName", v.getObjectName());
